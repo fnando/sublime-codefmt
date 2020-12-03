@@ -1,0 +1,133 @@
+{
+  // Format files on save.
+  "format_on_save": true,
+
+  // Enable debug mode.
+  // Commands can have additional flags for debug mode.
+  "debug": false,
+
+  // Format Golang files using goimports.
+  "goimports": {
+    // The command that will be executed for format files.
+    "command": ["goimports", "-w"],
+
+    // The scopes that will be considered when formatting
+    "scopes": ["source.go"],
+
+    // Additional flags when running in debug mode.
+    "debug": [],
+
+    // When no custom config file exists, use a default config file.
+    "default_config": null,
+
+    // Config files that will be looked up on the root of the project.
+    "config_files": []
+  },
+
+  // Format Golang files using gofmt.
+  // If you prefer gofmt over goimports, make sure you remove `goimports` from
+  // the `formatters` list.
+  "gofmt": {
+    // The command that will be executed for format files.
+    "command": ["gofmt", "-w"],
+
+    // The scopes that will be considered when formatting
+    "scopes": ["source.go"],
+
+    // Additional flags when running in debug mode.
+    "debug": [],
+
+    // When no custom config file exists, use a default config file.
+    "default_config": null,
+
+    // Config files that will be looked up on the root of the project.
+    "config_files": []
+  },
+
+  // Format Ruby files using rubocop.
+  "rubocop": {
+    // The command that will be executed for format files.
+    "command": ["rubocop", "--auto-correct-all", "--config", "$config"],
+
+    // The scopes that will be considered when formatting
+    "scopes": ["source.ruby"],
+
+    // Additional flags when running in debug mode.
+    "debug": ["--debug", "--extra-details"],
+
+    // When no custom config file exists, use a default config file.
+    "default_config": null,
+
+    // Config files that will be looked up on the root of the project.
+    "config_files": [".rubocop.yml"]
+  },
+
+  // Format files using Prettier.
+  "prettier": {
+    // The command that will be executed for format files.
+    "command": ["prettier", "--write", "--config", "$config"],
+
+    // The scopes that will be considered when formatting
+    "scopes": [
+      "source.css",
+      "source.js",
+      "source.json",
+      "source.jsx",
+      "source.postcss",
+      "source.scss",
+      "source.ts",
+      "source.tsx",
+      "source.yaml",
+      "text.html.markdown"
+    ],
+
+    // Additional flags when running in debug mode.
+    "debug": ["--loglevel", "debug"],
+
+    // When no custom config file exists, use a default config file.
+    "default_config": "Packages/Code Formatter/config/prettier.json",
+
+    // Config files that will be looked up on the root of the project.
+    "config_files": [
+      ".prettierrc",
+      ".prettierrc.json",
+      ".prettierrc.yml",
+      ".prettierrc.yaml",
+      ".prettierrc.json5",
+      ".prettierrc.js",
+      ".prettierrc.cjs",
+      "prettier.config.js",
+      "prettier.config.cjs",
+      ".prettierrc.toml"
+    ]
+  },
+
+  // Format files using eslint.
+  "eslint": {
+    // The command that will be executed for format files.
+    "command": ["eslint", "--fix", "--config", "$config"],
+
+    // The scopes that will be considered when formatting
+    "scopes": ["source.js", "source.jsx", "source.ts", "source.tsx"],
+
+    // Additional flags when running in debug mode.
+    "debug": ["--debug"],
+
+    // When no custom config file exists, use a default config file.
+    "default_config": null,
+
+    // Config files that will be looked up on the root of the project.
+    "config_files": [
+      ".eslintrc.js",
+      ".eslintrc.cjs",
+      ".eslintrc.yaml",
+      ".eslintrc.yml",
+      ".eslintrc.json",
+      ".eslintrc"
+    ]
+  },
+
+  // A list of formatters that are enabled.
+  // Must match keys defined above.
+  "formatters": ["goimports", "rubocop", "prettier", "eslint"]
+}

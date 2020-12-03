@@ -1,0 +1,25 @@
+[
+  {
+    "caption": "Code Formatter: Settings",
+    "command": "edit_settings",
+    "args": {
+      "base_file": "${packages}/Code Formatter/Code Formatter.sublime-settings",
+      "default": "{\n\t$0\n}\n"
+    }
+  },
+  {
+    "caption": "Code Formatter: Key Bindings",
+    "command": "edit_settings",
+    "args": {
+      "base_file": "${packages}/Code Formatter/Default.sublime-keymap",
+      "default": "[\n\t$0\n]\n"
+    }
+  },
+  {
+    "caption": "Code Formatter: Open Readme",
+    "command": "open_file",
+    "args": {
+      "file": "${packages}/Code Formatter/README.md"
+    }
+  }
+]

@@ -1,0 +1,40 @@
+[
+  {
+    "caption": "Preferences",
+    "children": [
+      {
+        "caption": "Package Settings",
+        "children": [
+          {
+            "caption": "Code Formatter",
+            "children": [
+              {
+                "args": {
+                  "base_file": "${packages}/Code Formatter/Code Formatter.sublime-settings",
+                  "default": "// Code Formatter - User\n{\n\t$0\n}\n"
+                },
+                "caption": "Settings",
+                "command": "edit_settings"
+              },
+              {
+                "caption": "-"
+              },
+              {
+                "args": {
+                  "base_file": "${packages}/Code Formatter/Default.sublime-keymap",
+                  "default": "// Key Bindings - User\n[\n\t$0\n]\n"
+                },
+                "caption": "Key Bindings",
+                "command": "edit_settings"
+              }
+            ]
+          }
+        ],
+        "id": "package-settings",
+        "mnemonic": "P"
+      }
+    ],
+    "id": "preferences",
+    "mnemonic": "n"
+  }
+]
