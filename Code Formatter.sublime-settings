@@ -6,6 +6,30 @@
   // Commands can have additional flags for debug mode.
   "debug": false,
 
+  // Format Python files using [autopep8](https://pypi.org/project/autopep8/).
+  "autopep8": {
+    // The command that will be executed for format files.
+    "command": [
+      "autopep8",
+      "--in-place",
+      "--aggressive",
+      "--global-config",
+      "$config"
+    ],
+
+    // The scopes that will be considered when formatting
+    "scopes": ["source.python"],
+
+    // Additional flags when running in debug mode.
+    "debug": ["--verbose"],
+
+    // When no custom config file exists, use a default config file.
+    "default_config": null,
+
+    // Config files that will be looked up on the root of the project.
+    "config_files": [".pycodestyle", "setup.cfg", "tox.ini", ".pep8", ".flake8"]
+  },
+
   // Format Golang files using goimports.
   "goimports": {
     // The command that will be executed for format files.
@@ -129,5 +153,5 @@
 
   // A list of formatters that are enabled.
   // Must match keys defined above.
-  "formatters": ["goimports", "rubocop", "prettier", "eslint"]
+  "formatters": ["goimports", "rubocop", "prettier", "eslint", "autopep8"]
 }

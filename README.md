@@ -4,11 +4,12 @@ A plugin that allows applying code formatting with minimum configuration.
 
 Includes support for running the following formatters:
 
-- [RuboCop](https://rubocop.org)
+- [Ruby's RuboCop](https://rubocop.org)
 - [ESLint](https://eslint.org)
 - [Prettier](https://prettier.io)
 - [Golang's gofmt](https://pkg.go.dev/cmd/gofmt)
 - [Golang's goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports)
+- [Python's autopep8](https://pypi.org/project/autopep8/)
 
 ## Installation
 
