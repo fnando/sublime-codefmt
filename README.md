@@ -5,6 +5,7 @@ A plugin that allows applying code formatting with minimum configuration.
 Includes support for running the following formatters:
 
 - [Ruby's RuboCop](https://rubocop.org)
+- [Ruby's rubyfmt](https://github.com/penelopezone/rubyfmt)
 - [ESLint](https://eslint.org)
 - [Prettier](https://prettier.io)
 - [Golang's gofmt](https://pkg.go.dev/cmd/gofmt)

@@ -48,7 +48,7 @@
     "config_files": []
   },
 
-  // Format Golang files using gofmt.
+  // Format Golang files using gofmt. Disabled by default.
   // If you prefer gofmt over goimports, make sure you remove `goimports` from
   // the `formatters` list.
   "gofmt": {
@@ -84,6 +84,27 @@
 
     // Config files that will be looked up on the root of the project.
     "config_files": [".rubocop.yml"]
+  },
+
+  // Format Ruby files using [rubyfmt](https://github.com/penelopezone/rubyfmt).
+  // Disabled by default.
+  // If you prefer rubyfmt over rubocop, make sure you remove `rubocop` from
+  // the `formatters` list.
+  "rubyfmt": {
+    // The command that will be executed for format files.
+    "command": ["rubyfmt", "-i"],
+
+    // The scopes that will be considered when formatting
+    "scopes": ["source.ruby"],
+
+    // Additional flags when running in debug mode.
+    "debug": [],
+
+    // When no custom config file exists, use a default config file.
+    "default_config": null,
+
+    // Config files that will be looked up on the root of the project.
+    "config_files": []
   },
 
   // Format files using Prettier.
