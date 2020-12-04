@@ -12,6 +12,7 @@ Includes support for running the following formatters:
 - [Golang's goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports)
 - [Python's autopep8](https://pypi.org/project/autopep8/)
 - [PHP Code Standards Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
+- [Rust's rustfmt](https://github.com/rust-lang/rustfmt)
 
 ## Installation
 

@@ -93,6 +93,24 @@
     "config_files": []
   },
 
+  // Format Rust files using rustfmt.
+  "rustfmt": {
+    // The command that will be executed for format files.
+    "command": ["rustfmt", "--emit", "files", "--config-path", "$config"],
+
+    // The scopes that will be considered when formatting
+    "scopes": ["source.rust"],
+
+    // Additional flags when running in debug mode.
+    "debug": ["--verbose"],
+
+    // When no custom config file exists, use a default config file.
+    "default_config": null,
+
+    // Config files that will be looked up on the root of the project.
+    "config_files": ["rustfmt.toml", ".rustfmt.toml"]
+  },
+
   // Format Ruby files using rubocop.
   "rubocop": {
     // The command that will be executed for format files.
@@ -155,7 +173,7 @@
     "debug": ["--loglevel", "debug"],
 
     // When no custom config file exists, use a default config file.
-    "default_config": "Packages/Code Formatter/config/prettier.json",
+    "default_config": "Packages/Codefmt/config/prettier.json",
 
     // Config files that will be looked up on the root of the project.
     "config_files": [
@@ -205,6 +223,7 @@
     "prettier",
     "eslint",
     "autopep8",
-    "php-cs-fixer"
+    "php-cs-fixer",
+    "rustfmt"
   ]
 }
