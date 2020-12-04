@@ -66,6 +66,31 @@
     "config_files": [".pycodestyle", "setup.cfg", "tox.ini", ".pep8", ".flake8"]
   },
 
+  // Format Swift files using [swiftformat](https://github.com/nicklockwood/SwiftFormat/).
+  "swiftformat": {
+    // The command that will be executed for format files.
+    "command": [
+      "swiftformat",
+      "$file",
+      "--output",
+      "$file",
+      "--config",
+      "$config"
+    ],
+
+    // The scopes that will be considered when formatting
+    "scopes": ["source.swift"],
+
+    // Additional flags when running in debug mode.
+    "debug": ["--verbose"],
+
+    // When no custom config file exists, use a default config file.
+    "default_config": null,
+
+    // Config files that will be looked up on the root of the project.
+    "config_files": [".swiftformat"]
+  },
+
   // Format PHP files using [PHP Code Standards Fixer](https://cs.symfony.com).
   "php-cs-fixer": {
     // The command that will be executed for format files.
@@ -275,6 +300,7 @@
     "autopep8",
     "php-cs-fixer",
     "rustfmt",
-    "svgo"
+    "svgo",
+    "swiftformat"
   ]
 }

@@ -1,25 +1,25 @@
 [
   {
-    "caption": "Code Formatter: Settings",
+    "caption": "Codefmt: Settings",
     "command": "edit_settings",
     "args": {
-      "base_file": "${packages}/Code Formatter/Code Formatter.sublime-settings",
+      "base_file": "${packages}/Codefmt/Codefmt.sublime-settings",
       "default": "{\n\t$0\n}\n"
     }
   },
   {
-    "caption": "Code Formatter: Key Bindings",
+    "caption": "Codefmt: Key Bindings",
     "command": "edit_settings",
     "args": {
-      "base_file": "${packages}/Code Formatter/Default.sublime-keymap",
+      "base_file": "${packages}/Codefmt/Default.sublime-keymap",
       "default": "[\n\t$0\n]\n"
     }
   },
   {
-    "caption": "Code Formatter: Open Readme",
+    "caption": "Codefmt: Open Readme",
     "command": "open_file",
     "args": {
-      "file": "${packages}/Code Formatter/README.md"
+      "file": "${packages}/Codefmt/README.md"
     }
   }
 ]
