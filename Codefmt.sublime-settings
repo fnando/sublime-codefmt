@@ -6,6 +6,41 @@
   // Commands can have additional flags for debug mode.
   "debug": false,
 
+  // Format Python files using [SVGO](https://www.npmjs.com/package/@svgr/plugin-svgo).
+  "svgo": {
+    // The command that will be executed for format files.
+    "command": [
+      "svgo",
+      "--config",
+      "$config",
+      "--multipass",
+      "--pretty",
+      "--input",
+      "$file",
+      "--output",
+      "$file"
+    ],
+
+    // The scopes that will be considered when formatting
+    "scopes": ["text.xml.svg"],
+
+    // Additional flags when running in debug mode.
+    "debug": [],
+
+    // When no custom config file exists, use a default config file.
+    "default_config": null,
+
+    // Config files that will be looked up on the root of the project.
+    "config_files": [
+      ".svgo.yml",
+      ".svgo.json",
+      "svgo.config.json",
+      ".svgo.config.json",
+      ".svgorc.json",
+      ".svgorc.yml"
+    ]
+  },
+
   // Format Python files using [autopep8](https://pypi.org/project/autopep8/).
   "autopep8": {
     // The command that will be executed for format files.
@@ -14,7 +49,8 @@
       "--in-place",
       "--aggressive",
       "--global-config",
-      "$config"
+      "$config",
+      "$file"
     ],
 
     // The scopes that will be considered when formatting
@@ -39,7 +75,8 @@
       "--using-cache",
       "no",
       "--config",
-      "$config"
+      "$config",
+      "$file"
     ],
 
     // The scopes that will be considered when formatting
@@ -58,7 +95,7 @@
   // Format Golang files using goimports.
   "goimports": {
     // The command that will be executed for format files.
-    "command": ["goimports", "-w"],
+    "command": ["goimports", "-w", "$file"],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.go"],
@@ -78,7 +115,7 @@
   // the `formatters` list.
   "gofmt": {
     // The command that will be executed for format files.
-    "command": ["gofmt", "-w"],
+    "command": ["gofmt", "-w", "$file"],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.go"],
@@ -96,7 +133,14 @@
   // Format Rust files using rustfmt.
   "rustfmt": {
     // The command that will be executed for format files.
-    "command": ["rustfmt", "--emit", "files", "--config-path", "$config"],
+    "command": [
+      "rustfmt",
+      "--emit",
+      "files",
+      "--config-path",
+      "$config",
+      "$file"
+    ],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.rust"],
@@ -114,7 +158,13 @@
   // Format Ruby files using rubocop.
   "rubocop": {
     // The command that will be executed for format files.
-    "command": ["rubocop", "--auto-correct-all", "--config", "$config"],
+    "command": [
+      "rubocop",
+      "--auto-correct-all",
+      "--config",
+      "$config",
+      "$file"
+    ],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.ruby"],
@@ -135,7 +185,7 @@
   // the `formatters` list.
   "rubyfmt": {
     // The command that will be executed for format files.
-    "command": ["rubyfmt", "-i"],
+    "command": ["rubyfmt", "-i", "$file"],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.ruby"],
@@ -153,7 +203,7 @@
   // Format files using Prettier.
   "prettier": {
     // The command that will be executed for format files.
-    "command": ["prettier", "--write", "--config", "$config"],
+    "command": ["prettier", "--write", "--config", "$config", "$file"],
 
     // The scopes that will be considered when formatting
     "scopes": [
@@ -193,7 +243,7 @@
   // Format files using eslint.
   "eslint": {
     // The command that will be executed for format files.
-    "command": ["eslint", "--fix", "--config", "$config"],
+    "command": ["eslint", "--fix", "--config", "$config", "$file"],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.js", "source.jsx", "source.ts", "source.tsx"],
@@ -224,6 +274,7 @@
     "eslint",
     "autopep8",
     "php-cs-fixer",
-    "rustfmt"
+    "rustfmt",
+    "svgo"
   ]
 }

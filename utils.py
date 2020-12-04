@@ -66,21 +66,22 @@ def run_formatter(view, formatter):
         command += formatter["debug"]
 
     config_file = find_config_file(formatter, root_dir)
+    context = {"file": filename, "config": config_file}
 
     try:
-        index = command.index("$config")
-
-        if config_file:
-            command[index] = config_file
-        else:
+        if not config_file:
+            del context["config"]
+            index = command.index("$config")
             command.pop(index)
             command.pop(index - 1)
     except ValueError:
         debug("command doesn't expect a config file")
 
-    command.append(filename)
+    debug("raw command:", command)
 
-    debug("using command", command)
+    command = [sublime.expand_variables(arg, context) for arg in command]
+
+    debug("using command:", command)
 
     with subprocess.Popen(command, stdout=subprocess.PIPE, cwd=root_dir, universal_newlines=True) as result:
         if is_debug():

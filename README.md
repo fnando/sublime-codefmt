@@ -4,15 +4,16 @@ A plugin that allows applying code formatting with minimum configuration.
 
 Includes support for running the following formatters:
 
-- [Ruby's RuboCop](https://rubocop.org)
-- [Ruby's rubyfmt](https://github.com/penelopezone/rubyfmt)
+- [Ruby’s RuboCop](https://rubocop.org)
+- [Ruby’s rubyfmt](https://github.com/penelopezone/rubyfmt)
 - [ESLint](https://eslint.org)
 - [Prettier](https://prettier.io)
-- [Golang's gofmt](https://pkg.go.dev/cmd/gofmt)
-- [Golang's goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports)
-- [Python's autopep8](https://pypi.org/project/autopep8/)
+- [Golang’s gofmt](https://pkg.go.dev/cmd/gofmt)
+- [Golang’s goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports)
+- [Python’s autopep8](https://pypi.org/project/autopep8/)
 - [PHP Code Standards Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
-- [Rust's rustfmt](https://github.com/rust-lang/rustfmt)
+- [Rust’s rustfmt](https://github.com/rust-lang/rustfmt)
+- [SVGO](https://github.com/svg/svgo)
 
 ## Installation
 
@@ -55,13 +56,17 @@ user configuration file could be something like this:
 {
   txtfmt: {
     // The command that will be executed for format files.
-    command: ["txtfmt", "--fix", "--config", "$config"],
+    // The special variables are:
+    //
+    // - `$config`: the full path to the configuration file we found.
+    // - `$file`: the full path to the file that’s being formatted.
+    command: ["txtfmt", "--fix", "--config", "$config", "$file"],
 
     // The scopes that will be considered when formatting
     scopes: ["text.plain"],
 
     // Additional flags when running in debug mode.
-    // If the formatter doesn't have a debug mode, you may set this to an empty
+    // If the formatter doesn’t have a debug mode, you may set this to an empty
     // array.
     debug: ["--debug"],
 
@@ -69,7 +74,7 @@ user configuration file could be something like this:
     default_config: null,
 
     // Config files that will be looked up on the root of the project.
-    // If the formatter doesn't require a config file (or is automatically
+    // If the formatter doesn’t require a config file (or is automatically
     // inferred by the formatter), you may want to set this to an empty array.
     config_files: ["txtfmt.config.json"],
   },
