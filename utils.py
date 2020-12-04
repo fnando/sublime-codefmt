@@ -8,7 +8,7 @@ settings = None
 
 def plugin_loaded():
     global settings
-    settings = sublime.load_settings("Code Formatter.sublime-settings")
+    settings = sublime.load_settings("Codefmt.sublime-settings")
 
 
 def is_debug():
@@ -20,7 +20,7 @@ def debug(*args):
     global settings
 
     if is_debug():
-        print("[Code Formatter]", *args)
+        print("[codefmt]", *args)
 
 
 def format_code_file(view, autosave):

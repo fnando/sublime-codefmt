@@ -19,7 +19,7 @@ Includes support for running the following formatters:
 
 1. Follow the instructions from https://sublime.fnando.com.
 2. Open the command pallete, run “Package Control: Install Package“, then search
-   for “Code Formatter“.
+   for “Codefmt“.
 
 ### Git Clone
 
@@ -29,11 +29,11 @@ takes you.
 
 ## Usage
 
-By default, Code Formatter is ran whenever you save a supported code file (i.e.
-a formatter is configured and enabled). You can disable this behaviour by
-changing the settings under “Sublime Text -> Preferences -> Package Settings ->
-Code Formatter -> Settings” or by using the command palette (`super+shift+p`)
-and searching for “Code Formatter: Settings”.
+By default, Codefmt is ran whenever you save a supported code file (i.e. a
+formatter is configured and enabled). You can disable this behaviour by changing
+the settings under “Sublime Text -> Preferences -> Package Settings -> Codefmt
+-> Settings” or by using the command palette (`super+shift+p`) and searching for
+“Codefmt: Settings”.
 
 You can also trigger commands using the command pallete by searching for “Code
 Formatter: Format File”. Additionally, you could set up a keyboard shortcut by
