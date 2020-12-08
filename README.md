@@ -14,6 +14,8 @@ Includes support for running the following formatters:
 - [PHP Code Standards Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
 - [Rust’s rustfmt](https://github.com/rust-lang/rustfmt)
 - [SVGO](https://github.com/svg/svgo)
+- [Flutter](https://flutter.dev/)
+- [Dart’s dartfmt](https://dart.dev/tools/dartfmt)
 
 ## Installation
 
