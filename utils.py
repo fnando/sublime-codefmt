@@ -2,6 +2,7 @@ import sublime
 import os
 import subprocess
 from pathlib import Path
+from platform import python_version
 
 settings = None
 
@@ -25,6 +26,8 @@ def debug(*args):
 
 def format_code_file(view, autosave):
   global settings
+
+  debug("python version:", python_version())
 
   if autosave and not settings.get("format_on_save"):
     debug("autoformat is disabled, skipping.")
