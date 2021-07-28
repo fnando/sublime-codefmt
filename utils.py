@@ -106,7 +106,6 @@ def run_formatter(view, formatter):
   window.status_message("%s: done." %
                         formatter_name if return_code == 0 else "%s: error." %
                         formatter_name)
-  view.sel().add(sublime.Region(view.text_point(row, col)))
 
 
 def find_matching_formatters(view):
