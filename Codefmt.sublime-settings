@@ -21,7 +21,7 @@
     "default_config": null,
 
     // Config files that will be looked up on the root of the project.
-    "config_files": []
+    "config_files": [".style.yapf", "setup.cfg", "pyproject.toml"]
   },
 
   // Format Dart files using [Flutter](https://flutter.dev/docs/reference/flutter-cli).
