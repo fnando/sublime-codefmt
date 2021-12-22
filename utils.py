@@ -24,6 +24,22 @@ def debug(*args):
         print("[codefmt]", *args)
 
 
+def expand_formatter_variables(formatter, context):
+    if "variables" not in formatter:
+        return context
+
+    for variable, rules in formatter["variables"].items():
+        for rule in rules:
+            if "endswith" in rule and True in [
+                    context["file"].endswith(input)
+                    for input in rule["endswith"]
+            ]:
+                context[variable] = rule["value"]
+                break
+
+    return context
+
+
 def format_code_file(view, autosave):
     global settings
 
@@ -69,7 +85,10 @@ def run_formatter(view, formatter):
         command += formatter["debug"]
 
     config_file = find_config_file(formatter, root_dir)
-    context = {"file": filename, "config": config_file}
+    context = expand_formatter_variables(formatter, {
+        "file": filename,
+        "config": config_file
+    })
 
     try:
         if not config_file:

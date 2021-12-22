@@ -289,7 +289,15 @@
   // Format files using Prettier.
   "prettier": {
     // The command that will be executed for format files.
-    "command": ["prettier", "--write", "--config", "$config", "$file"],
+    "command": [
+      "prettier",
+      "--parser",
+      "$parser",
+      "--write",
+      "--config",
+      "$config",
+      "$file"
+    ],
 
     // The scopes that will be considered when formatting
     "scopes": [
@@ -302,8 +310,20 @@
       "source.ts",
       "source.tsx",
       "source.yaml",
-      "text.html.markdown"
+      "text.html.markdown",
+      "text.html"
     ],
+
+    // Variables that will be used to compose the command.
+    "variables": {
+      "parser": [
+        { "endswith": [".html", ".html.erb"], "value": "html" },
+        { "endswith": [".md", ".markdown"], "value": "markdown" },
+        { "endswith": [".css", ".postcss"], "value": "css" },
+        { "endswith": [".scss"], "value": "scss" },
+        { "endswith": [".yaml", ".yml"], "value": "yaml" }
+      ]
+    },
 
     // Additional flags when running in debug mode.
     "debug": ["--loglevel", "debug"],
