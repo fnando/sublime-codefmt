@@ -4,22 +4,16 @@ import subprocess
 from pathlib import Path
 from platform import python_version
 
-settings = None
 
-
-def plugin_loaded():
-    global settings
-    settings = sublime.load_settings("Codefmt.sublime-settings")
+def settings(key):
+    return sublime.load_settings("Codefmt.sublime-settings").get(key)
 
 
 def is_debug():
-    global settings
-    return settings.get("debug")
+    return settings("debug")
 
 
 def debug(*args):
-    global settings
-
     if is_debug():
         print("[codefmt]", *args)
 
@@ -41,11 +35,9 @@ def expand_formatter_variables(formatter, context):
 
 
 def format_code_file(view, autosave):
-    global settings
-
     debug("python version:", python_version())
 
-    if autosave and not settings.get("format_on_save"):
+    if autosave and not settings("format_on_save"):
         debug("autoformat is disabled, skipping.")
         return
 
@@ -63,7 +55,6 @@ def format_code_file(view, autosave):
 
 
 def run_formatter(view, formatter):
-    global settings
 
     (row, col) = view.rowcol(view.sel()[0].begin())
     filename = view.file_name()
@@ -132,15 +123,13 @@ def run_formatter(view, formatter):
 
 
 def find_matching_formatters(view):
-    global settings
-
-    enabled_formatters = settings.get("formatters")
+    enabled_formatters = settings("formatters")
     debug("enabled formatters:", enabled_formatters)
 
     formatters = []
 
     for name in enabled_formatters:
-        formatter = settings.get(name)
+        formatter = settings(name)
 
         if formatter is None:
             debug(formatter, "settings is missing")
