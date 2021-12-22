@@ -317,7 +317,7 @@
     // Variables that will be used to compose the command.
     "variables": {
       "parser": [
-        { "endswith": [".html", ".html.erb"], "value": "html" },
+        { "endswith": [".html"], "value": "html" },
         { "endswith": [".md", ".markdown"], "value": "markdown" },
         { "endswith": [".css", ".postcss"], "value": "css" },
         { "endswith": [".scss"], "value": "scss" },
