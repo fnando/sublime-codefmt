@@ -9,7 +9,7 @@
   // Format Python file using [yapf](https://pypi.org/project/yapf/).
   "yapf": {
     // The command that will be executed for format files.
-    "command": ["yapf", "--in-place", "$file"],
+    "command": ["yapf", "--style", "$config", "--in-place", "$file"],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.python"],
@@ -18,7 +18,7 @@
     "debug": ["--verbose"],
 
     // When no custom config file exists, use a default config file.
-    "default_config": null,
+    "default_config": "Packages/Codefmt/config/style.yapf",
 
     // Config files that will be looked up on the root of the project.
     "config_files": [".style.yapf", "setup.cfg", "pyproject.toml"]
