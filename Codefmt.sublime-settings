@@ -97,6 +97,7 @@
       ".svgo.json",
       "svgo.config.json",
       ".svgo.config.json",
+      "svgo.config.js",
       ".svgorc.json",
       ".svgorc.yml"
     ]
