@@ -320,6 +320,7 @@
       "parser": [
         { "endswith": [".html"], "value": "html" },
         { "endswith": [".md", ".markdown"], "value": "markdown" },
+        { "endswith": [".md.erb", ".markdown"], "value": "markdown" },
         { "endswith": [".css", ".postcss"], "value": "css" },
         { "endswith": [".scss"], "value": "scss" },
         { "endswith": [".yaml", ".yml"], "value": "yaml" }
