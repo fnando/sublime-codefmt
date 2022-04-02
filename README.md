@@ -17,6 +17,7 @@ Includes support for running the following formatters:
 - [SVGO](https://github.com/svg/svgo)
 - [Flutter](https://flutter.dev/)
 - [Dart’s dartfmt](https://dart.dev/tools/dartfmt)
+- [Crystal](https://crystal-lang.org/reference/1.3/using_the_compiler/index.html#crystal-tool-format)
 
 ## Installation
 

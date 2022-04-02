@@ -6,6 +6,24 @@
   // Commands can have additional flags for debug mode.
   "debug": false,
 
+  // Format Crystal file.
+  "crystal": {
+    // The command that will be executed for format files.
+    "command": ["crystal", "tool", "format", "$file"],
+
+    // The scopes that will be considered when formatting
+    "scopes": ["source.crystal"],
+
+    // Additional flags when running in debug mode.
+    "debug": [],
+
+    // When no custom config file exists, use a default config file.
+    "default_config": null,
+
+    // Config files that will be looked up on the root of the project.
+    "config_files": []
+  },
+
   // Format Python file using [yapf](https://pypi.org/project/yapf/).
   "yapf": {
     // The command that will be executed for format files.
@@ -385,6 +403,7 @@
     "svgo",
     "swiftformat",
     "flutter",
-    "yapf"
+    "yapf",
+    "crystal"
   ]
 }
