@@ -3,6 +3,8 @@ import os
 import subprocess
 from pathlib import Path
 from platform import python_version
+import io
+from contextlib import redirect_stdout
 
 
 def settings(key):
@@ -14,8 +16,10 @@ def is_debug():
 
 
 def debug(*args):
-    if is_debug():
-        print("[codefmt]", *args)
+    if not is_debug():
+        return
+
+    print("[codefmt]", *args)
 
 
 def expand_formatter_variables(formatter, context):
@@ -35,6 +39,7 @@ def expand_formatter_variables(formatter, context):
 
 
 def format_code_file(view, autosave):
+    debug("\n\n=================================================\n")
     debug("python version:", python_version())
 
     if autosave and not settings("format_on_save"):
@@ -96,16 +101,27 @@ def run_formatter(view, formatter):
 
     debug("using command:", command)
 
+    os.chdir(root_dir)
+
+    debug("cwd is:", os.getcwd())
+
     with subprocess.Popen(command,
                           stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE,
                           cwd=root_dir,
                           universal_newlines=True) as result:
         result.wait()
 
         if is_debug():
             debug("== Command output ==")
+            debug("-- stdout ---")
 
             for line in result.stdout:
+                debug("=>", line.rstrip())
+
+            debug("-- stderr ---")
+
+            for line in result.stderr:
                 debug("=>", line.rstrip())
 
             debug("== End of Command output ==")
@@ -127,12 +143,13 @@ def find_matching_formatters(view):
     debug("enabled formatters:", enabled_formatters)
 
     formatters = []
+    overrides = settings("overrides")
 
     for name in enabled_formatters:
         formatter = settings(name)
 
         if formatter is None:
-            debug(formatter, "settings is missing")
+            debug(name, "settings is missing")
             next
 
         matched = True in [
@@ -140,7 +157,15 @@ def find_matching_formatters(view):
         ]
 
         if matched:
+            override = {}
+
+            if name in overrides:
+                override = overrides[name]
+
+            debug(name, "override:", override)
+
             formatter = formatter.copy()
+            formatter.update(override)
             formatter.update({"name": name})
             formatters.append(formatter)
 

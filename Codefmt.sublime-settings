@@ -391,6 +391,10 @@
     ]
   },
 
+  // Add your custom overrides to the following node.
+  // You can set only the keys you need to override, as the keys are merged.
+  "overrides": {},
+
   // A list of formatters that are enabled.
   // Must match keys defined above.
   "formatters": [

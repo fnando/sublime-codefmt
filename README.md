@@ -42,50 +42,101 @@ the settings under “Sublime Text -> Preferences -> Package Settings -> Codefmt
 “Codefmt: Settings”.
 
 You can also trigger commands using the command pallete by searching for “Code
-Formatter: Format File”. Additionally, you could set up a keyboard shortcut by
-adding a keybinding like the following:
+Formatter: Format File”. You can add a custom shortcut by using the following
+command:
 
 ```json
 [{ "keys": ["super+k", "super+f"], "command": "format_code_file" }]
 ```
 
+When auto saving is disabled, you can set up alternative keybindings so you can
+use `super+s` to save and format the current file, and another shortcut to
+bypass auto formatting. The following keybindings show how to do that for macOS:
+
+```json
+[
+  {
+    "keys": ["super+s"],
+    "command": "format_code_file"
+  },
+  {
+    "keys": ["ctrl+s"],
+    "command": "save",
+    "args": { "async": true }
+  }
+]
+```
+
 ### Add new formatters
 
-If you want to add a new formatter, you can do it so by adding adding a new key
-that identifiers the formatter to `formatters`, and the related confirmation
-using the same key. So, let’s say you want add a formatter called `txtfmt`. The
-user configuration file could be something like this:
+You add new formatters or override the settings for an existing one. All you
+have to do is a new key that identifiers the formatter to `formatters`, and the
+related configuration using the same key. So, let’s say you want add a formatter
+called `txtfmt`. The user configuration file could be something like this:
 
 ```json5
 {
-  txtfmt: {
-    // The command that will be executed for format files.
-    // The special variables are:
-    //
-    // - `$config`: the full path to the configuration file we found.
-    // - `$file`: the full path to the file that’s being formatted.
-    command: ["txtfmt", "--fix", "--config", "$config", "$file"],
+  overrides: {
+    txtfmt: {
+      // The command that will be executed for format files.
+      // The special variables are:
+      //
+      // - `$config`: the full path to the configuration file we found.
+      // - `$file`: the full path to the file that’s being formatted.
+      command: ["txtfmt", "--fix", "--config", "$config", "$file"],
 
-    // The scopes that will be considered when formatting
-    scopes: ["text.plain"],
+      // The scopes that will be considered when formatting
+      scopes: ["text.plain"],
 
-    // Additional flags when running in debug mode.
-    // If the formatter doesn’t have a debug mode, you may set this to an empty
-    // array.
-    debug: ["--debug"],
+      // Additional flags when running in debug mode.
+      // If the formatter doesn’t have a debug mode, you may set this to an empty
+      // array.
+      debug: ["--debug"],
 
-    // When no custom config file exists, use a default config file.
-    default_config: null,
+      // When no custom config file exists, use a default config file.
+      default_config: null,
 
-    // Config files that will be looked up on the root of the project.
-    // If the formatter doesn’t require a config file (or is automatically
-    // inferred by the formatter), you may want to set this to an empty array.
-    config_files: ["txtfmt.config.json"],
+      // Config files that will be looked up on the root of the project.
+      // If the formatter doesn’t require a config file (or is automatically
+      // inferred by the formatter), you may want to set this to an empty array.
+      config_files: ["txtfmt.config.json"],
+    },
   },
 
   formatters: ["gofmt", "rubocop", "prettier", "eslint", "txtfmt"],
 }
 ```
+
+> **Note**
+>
+> When overriding existing commands, you only need to define the keys that are
+> changing; there's no need to add all options.
+
+### Using version managers
+
+If you use version managers like [asdf](https://asdf-vm.com), you may need to
+set the command to the full path. The following example shows how to override
+[RuboCop](https://rubocop.org)'s command to use the shim:
+
+```json
+{
+  "overrides": {
+    "rubocop": {
+      "command": [
+        "/Users/fnando/.asdf/shims/rubocop",
+        "--auto-correct-all",
+        "--config",
+        "$config",
+        "$file"
+      ]
+    }
+  }
+}
+```
+
+> **Note**
+>
+> Commands are always executed from the root directory of your project.
 
 ## License
 

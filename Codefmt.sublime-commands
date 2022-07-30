@@ -7,6 +7,7 @@
       "default": "{\n\t$0\n}\n"
     }
   },
+
   {
     "caption": "Codefmt: Key Bindings",
     "command": "edit_settings",
@@ -15,11 +16,17 @@
       "default": "[\n\t$0\n]\n"
     }
   },
+
   {
     "caption": "Codefmt: Open Readme",
     "command": "open_file",
     "args": {
       "file": "${packages}/Codefmt/README.md"
     }
+  },
+
+  {
+    "caption": "Codefmt: Format File",
+    "command": "format_code_file"
   }
 ]
