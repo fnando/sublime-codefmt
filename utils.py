@@ -11,6 +11,15 @@ def settings(key):
     return sublime.load_settings("Codefmt.sublime-settings").get(key)
 
 
+def find_root_dir_for_file(folders, file_name):
+    if len(folders) == 0:
+        return os.path.dirname(file_name)
+
+    for folder in folders:
+        if folder + "/" in file_name:
+            return folder
+
+
 def is_debug():
     return settings("debug")
 
@@ -43,7 +52,7 @@ def format_code_file(view, autosave):
     debug("python version:", python_version())
 
     if autosave and not settings("format_on_save"):
-        debug("autoformat is disabled, skipping.")
+        debug("autoformat on save is disabled, skipping.")
         return
 
     debug("file scopes:", view.scope_name(0).strip().split(" "))
@@ -60,17 +69,12 @@ def format_code_file(view, autosave):
 
 
 def run_formatter(view, formatter):
-
     (row, col) = view.rowcol(view.sel()[0].begin())
     filename = view.file_name()
     formatter_name = formatter["name"]
     window = view.window()
     folders = window.folders()
-
-    if len(folders) == 1:
-        root_dir = folders[0]
-    else:
-        root_dir = os.path.dirname(filename)
+    root_dir = find_root_dir_for_file(folders, filename)
 
     debug("using root dir as", root_dir)
     window.status_message("%s: formatting…" % formatter_name)
