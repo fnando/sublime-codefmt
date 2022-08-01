@@ -88,8 +88,9 @@ def run_command(cmd, root_dir, stdout):
                        stdout=PIPE,
                        stderr=PIPE,
                        cwd=root_dir,
+                       env=os.environ,
                        universal_newlines=True)
-        result.wait()
+        result.wait(settings("timeout"))
         stdout.write(
             json.dumps({
                 "stdout": str(result.stdout.read()),
@@ -103,6 +104,8 @@ def run_command(cmd, root_dir, stdout):
                 "stderr": "%s: %s" % (error.__class__.__name__, error),
                 "returncode": 1
             }))
+    finally:
+        result.kill()
 
 
 def run_formatter(view, formatter):
