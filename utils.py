@@ -28,6 +28,11 @@ def find_root_dir_for_file(folders, file_name):
         if folder + "/" in file_name:
             return folder
 
+    if len(folders) > 0:
+        return folders[0]
+
+    return os.path.dirname(file_name)
+
 
 def is_debug():
     return settings("debug")
@@ -79,7 +84,11 @@ def format_code_file(view, autosave):
 
 def run_command(cmd, root_dir, stdout):
     try:
-        result = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=root_dir)
+        result = Popen(cmd,
+                       stdout=PIPE,
+                       stderr=PIPE,
+                       cwd=root_dir,
+                       universal_newlines=True)
         result.wait()
         stdout.write(
             json.dumps({
