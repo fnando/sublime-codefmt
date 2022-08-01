@@ -1,10 +1,11 @@
 import sublime
 import os
-import subprocess
+from subprocess import Popen, PIPE
 from pathlib import Path
 from platform import python_version
 import io
-from contextlib import redirect_stdout
+import threading
+import json
 
 
 def settings(key):
@@ -12,6 +13,14 @@ def settings(key):
 
 
 def find_root_dir_for_file(folders, file_name):
+    debug("finding root dir for file:", {
+        "folders": folders,
+        "file_name": file_name
+    })
+
+    if folders is None:
+        folders = []
+
     if len(folders) == 0:
         return os.path.dirname(file_name)
 
@@ -68,78 +77,109 @@ def format_code_file(view, autosave):
         run_formatter(view, formatter)
 
 
+def run_command(cmd, root_dir, stdout):
+    try:
+        result = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=root_dir)
+        result.wait()
+        stdout.write(
+            json.dumps({
+                "stdout": str(result.stdout.read()),
+                "stderr": str(result.stderr.read()),
+                "returncode": result.returncode
+            }))
+    except Exception as error:
+        stdout.write(
+            json.dumps({
+                "stdout": "",
+                "stderr": "%s: %s" % (error.__class__.__name__, error),
+                "returncode": 1
+            }))
+
+
 def run_formatter(view, formatter):
     (row, col) = view.rowcol(view.sel()[0].begin())
-    filename = view.file_name()
+    file_name = view.file_name()
+
+    if file_name is None:
+        debug("ERROR: view didn't return a file name for some reason")
+        return
+
     formatter_name = formatter["name"]
     window = view.window()
     folders = window.folders()
-    root_dir = find_root_dir_for_file(folders, filename)
+    root_dir = find_root_dir_for_file(folders, file_name)
 
     debug("using root dir as", root_dir)
     window.status_message("%s: formatting…" % formatter_name)
 
-    command = formatter["command"]
+    cmd = formatter["command"]
 
     if is_debug() and formatter["debug"]:
-        command += formatter["debug"]
+        cmd += formatter["debug"]
 
     config_file = find_config_file(formatter, root_dir)
     context = expand_formatter_variables(formatter, {
-        "file": filename,
+        "file": file_name,
         "config": config_file
     })
 
     try:
         if not config_file:
             del context["config"]
-            index = command.index("$config")
-            command.pop(index)
-            command.pop(index - 1)
+            index = cmd.index("$config")
+            cmd.pop(index)
+            cmd.pop(index - 1)
     except ValueError:
         debug("command doesn't expect a config file")
 
-    debug("raw command:", command)
+    debug("raw command:", cmd)
 
-    command = [sublime.expand_variables(arg, context) for arg in command]
+    cmd = [sublime.expand_variables(arg, context) for arg in cmd]
 
-    debug("using command:", command)
+    debug("using command:", cmd)
 
     os.chdir(root_dir)
 
     debug("cwd is:", os.getcwd())
 
-    with subprocess.Popen(command,
-                          stdout=subprocess.PIPE,
-                          stderr=subprocess.PIPE,
-                          cwd=root_dir,
-                          universal_newlines=True) as result:
-        result.wait()
+    stdout = io.StringIO()
 
-        if is_debug():
-            debug("== Command output ==")
-            debug("-- stdout ---")
+    thread = threading.Thread(target=run_command,
+                              args=(cmd, root_dir, stdout),
+                              name=formatter_name)
+    thread.start()
+    thread.join(settings("timeout"))
 
-            for line in result.stdout:
-                debug("=>", line.rstrip())
+    if thread.is_alive():
+        debug("thread was killed, which means command took to long to finish")
+        result = {"returncode": -1, "stdout": "", "stderr": ""}
+    else:
+        output = stdout.getvalue()
+        result = json.loads(output)
+        debug("command exited with status", result["returncode"])
 
-            debug("-- stderr ---")
+    success = result["returncode"] == 0
 
-            for line in result.stderr:
-                debug("=>", line.rstrip())
+    if is_debug():
+        debug("== Command output ==")
+        debug("-- stdout ---")
+        debug(result["stdout"])
 
-            debug("== End of Command output ==")
+        debug("-- stderr ---")
+        debug(result["stderr"])
 
-    return_code = result.returncode
-    debug("%s command finished with exit(%d)" % (formatter_name, return_code))
+        debug("== End of Command output ==")
 
-    if return_code != 0:
+    debug("%s command finished" % (formatter_name))
+
+    if not success:
         debug(
             "some commands exit with nonzero status to indicate that there are issues that couldn't be automatically fixed."
         )
 
-    window.status_message("%s: done." % formatter_name if return_code ==
-                          0 else "%s: error." % formatter_name)
+    window.status_message("%s: done." %
+                          formatter_name if success else "%s: error." %
+                          formatter_name)
 
 
 def find_matching_formatters(view):

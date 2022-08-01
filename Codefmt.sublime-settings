@@ -6,6 +6,9 @@
   // Commands can have additional flags for debug mode.
   "debug": false,
 
+  // The maximum allowed execution time in seconds.
+  "timeout": 1.5,
+
   // Format Crystal file.
   "crystal": {
     // The command that will be executed for format files.
