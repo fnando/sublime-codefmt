@@ -110,7 +110,7 @@
     "debug": [],
 
     // When no custom config file exists, use a default config file.
-    "default_config": null,
+    "default_config": "Packages/Codefmt/config/svgo.js",
 
     // Config files that will be looked up on the root of the project.
     "config_files": [
@@ -381,7 +381,7 @@
     "debug": ["--debug"],
 
     // When no custom config file exists, use a default config file.
-    "default_config": null,
+    "default_config": "Packages/Codefmt/config/eslint.json",
 
     // Config files that will be looked up on the root of the project.
     "config_files": [
