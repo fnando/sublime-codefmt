@@ -6,6 +6,7 @@ from platform import python_version
 import io
 import threading
 import json
+import shutil
 
 
 def settings(key):
@@ -45,18 +46,78 @@ def debug(*args):
     print("[codefmt]", *args)
 
 
-def expand_formatter_variables(formatter, context):
-    if "variables" not in formatter:
+def expand_command(cmd, context):
+    new_cmd = []
+
+    for arg in cmd:
+        value = arg
+        key = str(value).lstrip("$")
+
+        if key in context:
+            value = context[key]
+
+        if type(value) == list:
+            value = expand_command(value, context)
+
+            for item in value:
+                new_cmd.append(item)
+        else:
+            new_cmd.append(value)
+
+    return new_cmd
+
+
+def expand_formatter_variables(variables, context):
+    if variables is None:
         return context
 
-    for variable, rules in formatter["variables"].items():
-        for rule in rules:
-            if "endswith" in rule and True in [
-                    context["file"].endswith(input)
-                    for input in rule["endswith"]
-            ]:
-                context[variable] = rule["value"]
-                break
+    for variable, rules in variables.items():
+        context = ends_with_rule(rules, variable, context)
+        context = root_dir_has_rule(rules, variable, context)
+        context = default_rule(rules, variable, context)
+
+    return context
+
+
+def default_rule(rules, variable, context):
+    for rule in rules:
+        if not "default" in rule:
+            continue
+
+        if variable in context and context[variable] is not None:
+            continue
+
+        context[variable] = rule["default"]
+
+    return context
+
+
+def ends_with_rule(rules, variable, context):
+    for rule in rules:
+
+        if not "endswith" in rule:
+            continue
+
+        if True in [
+                context["file"].endswith(input) for input in rule["endswith"]
+        ]:
+            context[variable] = rule["value"]
+            break
+
+    return context
+
+
+def root_dir_has_rule(rules, variable, context):
+    for rule in rules:
+        if not "root_dir_has" in rule:
+            continue
+
+        if True in [
+                os.path.exists(os.path.join(context["root_dir"], input))
+                for input in rule["root_dir_has"]
+        ]:
+            context[variable] = rule["value"]
+            break
 
     return context
 
@@ -82,13 +143,13 @@ def format_code_file(view, autosave):
         run_formatter(view, formatter)
 
 
-def run_command(cmd, root_dir, stdout):
+def run_command(cmd, root_dir, stdout, env):
     try:
         result = Popen(cmd,
                        stdout=PIPE,
                        stderr=PIPE,
                        cwd=root_dir,
-                       env=os.environ,
+                       env=env,
                        universal_newlines=True)
         result.wait(settings("timeout"))
         stdout.write(
@@ -116,13 +177,22 @@ def run_formatter(view, formatter):
         debug("ERROR: view didn't return a file name for some reason")
         return
 
-    formatter_name = formatter["name"]
     window = view.window()
     folders = window.folders()
+    formatter_name = formatter["name"]
+    window.status_message("%s: formatting…" % formatter_name)
+
     root_dir = find_root_dir_for_file(folders, file_name)
+    paths = list(
+        map(lambda path: os.path.realpath(os.path.expanduser(path)),
+            settings("paths") or []))
+
+    debug("prepending paths:", paths)
+    env = os.environ.copy()
+    env["PATH"] = "%s:%s" % (":".join(paths), env["PATH"])
 
     debug("using root dir as", root_dir)
-    window.status_message("%s: formatting…" % formatter_name)
+    debug("timeout is", settings("timeout"))
 
     cmd = formatter["command"]
 
@@ -130,10 +200,17 @@ def run_formatter(view, formatter):
         cmd += formatter["debug"]
 
     config_file = find_config_file(formatter, root_dir)
-    context = expand_formatter_variables(formatter, {
-        "file": file_name,
-        "config": config_file
-    })
+
+    context = {"file": file_name, "config": config_file, "root_dir": root_dir}
+
+    if "variables" in formatter:
+        variables = formatter["variables"]
+    else:
+        variables = {}
+
+    context = expand_formatter_variables(variables, context)
+    context = expand_formatter_variables(settings("variables") or {}, context)
+    debug("context is:", context)
 
     try:
         if not config_file:
@@ -146,7 +223,15 @@ def run_formatter(view, formatter):
 
     debug("raw command:", cmd)
 
-    cmd = [sublime.expand_variables(arg, context) for arg in cmd]
+    cmd = expand_command(cmd, context)
+
+    original_path = os.environ["PATH"]
+    bin = cmd[0]
+    os.environ["PATH"] = env["PATH"]
+    full_bin_path = shutil.which(bin) or bin
+    os.environ["PATH"] = original_path
+
+    cmd[0] = full_bin_path
 
     debug("using command:", cmd)
 
@@ -154,16 +239,19 @@ def run_formatter(view, formatter):
 
     debug("cwd is:", os.getcwd())
 
+    if settings("debug"):
+        debug("`which %s` returned" % bin, full_bin_path)
+
     stdout = io.StringIO()
 
     thread = threading.Thread(target=run_command,
-                              args=(cmd, root_dir, stdout),
+                              args=(cmd, root_dir, stdout, env),
                               name=formatter_name)
     thread.start()
     thread.join(settings("timeout"))
 
     if thread.is_alive():
-        debug("thread was killed, which means command took to long to finish")
+        debug("thread was killed, which means command took too long to finish")
         result = {"returncode": -1, "stdout": "", "stderr": ""}
     else:
         output = stdout.getvalue()

@@ -7,7 +7,18 @@
   "debug": false,
 
   // The maximum allowed execution time in seconds.
-  "timeout": 1.5,
+  // Be warned that higher numbers may lock the interface.
+  "timeout": 1,
+
+  // Prepend these paths to $PATH when running commands.
+  // If you use [asdf](https://asdf-vm.com), you may want to add `~/.asdf/shims`
+  // to the list below.
+  "paths": [],
+
+  // Defines global variables.
+  "variables": {
+    "bundler": [{ "root_dir_has": ["Gemfile"], "value": ["bundle", "exec"] }]
+  },
 
   // Format Crystal file.
   "crystal": {
@@ -267,6 +278,7 @@
   "rubocop": {
     // The command that will be executed for format files.
     "command": [
+      "$bundler",
       "rubocop",
       "--auto-correct-all",
       "--config",
@@ -344,7 +356,8 @@
         { "endswith": [".md.erb", ".markdown"], "value": "markdown" },
         { "endswith": [".css", ".postcss"], "value": "css" },
         { "endswith": [".scss"], "value": "scss" },
-        { "endswith": [".yaml", ".yml"], "value": "yaml" }
+        { "endswith": [".yaml", ".yml"], "value": "yaml" },
+        { "default": "" }
       ]
     },
 
