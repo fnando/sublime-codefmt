@@ -1,0 +1,4 @@
+[
+  {"command": "save", "args": {"async": false}},
+  {"command": "format_code_file"}
+]

@@ -2,6 +2,9 @@
   // Format files on save.
   "format_on_save": true,
 
+  // Enable log output.
+  "log": false,
+
   // Enable debug mode.
   // Commands can have additional flags for debug mode.
   "debug": false,

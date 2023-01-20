@@ -39,11 +39,13 @@ def is_debug():
     return settings("debug")
 
 
-def debug(*args):
-    if not is_debug():
-        return
+def is_log():
+    return settings("log")
 
-    print("[codefmt]", *args)
+
+def debug(*args):
+    if is_debug() or is_log():
+        print("[codefmt]", *args)
 
 
 def expand_command(cmd, context):

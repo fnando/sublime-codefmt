@@ -57,7 +57,8 @@ bypass auto formatting. The following keybindings show how to do that for macOS:
 [
   {
     "keys": ["super+s"],
-    "command": "format_code_file"
+    "command": "run_macro_file",
+    "args": {"file": "Packages/Codefmt/save_and_format_code_file.sublime-macro"}
   },
   {
     "keys": ["ctrl+s"],
