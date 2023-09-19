@@ -7,6 +7,7 @@ import io
 import threading
 import json
 import shutil
+from shlex import quote
 
 
 def settings(key):
@@ -145,30 +146,27 @@ def format_code_file(view, autosave):
         run_formatter(view, formatter)
 
 
-def run_command(cmd, root_dir, stdout, env):
+def run_command(cmd, root_dir, env):
+    process = None
+    result = (1, "", "Failed to run command (generic error)")
+
     try:
-        result = Popen(cmd,
-                       stdout=PIPE,
-                       stderr=PIPE,
-                       cwd=root_dir,
-                       env=env,
-                       universal_newlines=True)
-        result.wait(settings("timeout"))
-        stdout.write(
-            json.dumps({
-                "stdout": str(result.stdout.read()),
-                "stderr": str(result.stderr.read()),
-                "returncode": result.returncode
-            }))
+        process = Popen(cmd,
+                        stdout=PIPE,
+                        stderr=PIPE,
+                        cwd=root_dir,
+                        env=env,
+                        universal_newlines=True)
+        stdout, stderr = process.communicate(timeout=settings("timeout"))
+        result = (process.returncode, stdout, stderr)
+    except TimeoutExpired:
+        process.kill()
+        stdout, stderr = process.communicate()
+        result = (1, stdout, stderr)
     except Exception as error:
-        stdout.write(
-            json.dumps({
-                "stdout": "",
-                "stderr": "%s: %s" % (error.__class__.__name__, error),
-                "returncode": 1
-            }))
-    finally:
-        result.kill()
+        return (1, "", "%s: %s" % (error.__class__.__name__, error))
+
+    return result
 
 
 def run_formatter(view, formatter):
@@ -227,6 +225,10 @@ def run_formatter(view, formatter):
 
     cmd = expand_command(cmd, context)
 
+    if cmd[0].startswith("$"):
+        debug("`%s`" % cmd[0], "wasn't expanded, so removing from command")
+        cmd.pop(0)
+
     original_path = os.environ["PATH"]
     bin = cmd[0]
     os.environ["PATH"] = env["PATH"]
@@ -235,7 +237,7 @@ def run_formatter(view, formatter):
 
     cmd[0] = full_bin_path
 
-    debug("using command:", cmd)
+    debug("using command:", *map(lambda a: quote(a), cmd))
 
     os.chdir(root_dir)
 
@@ -244,35 +246,22 @@ def run_formatter(view, formatter):
     if settings("debug"):
         debug("`which %s` returned" % bin, full_bin_path)
 
-    stdout = io.StringIO()
+    (returncode, stdout, stderr) = run_command(cmd=cmd,
+                                               root_dir=root_dir,
+                                               env=env)
+    success = returncode == 0
 
-    thread = threading.Thread(target=run_command,
-                              args=(cmd, root_dir, stdout, env),
-                              name=formatter_name)
-    thread.start()
-    thread.join(settings("timeout"))
-
-    if thread.is_alive():
-        debug("thread was killed, which means command took too long to finish")
-        result = {"returncode": -1, "stdout": "", "stderr": ""}
-    else:
-        output = stdout.getvalue()
-        result = json.loads(output)
-        debug("command exited with status", result["returncode"])
-
-    success = result["returncode"] == 0
-
-    if is_debug():
+    if is_debug() or is_log():
         debug("== Command output ==")
         debug("-- stdout ---")
-        debug(result["stdout"])
+        debug(stdout if stdout.strip("\n\r\t ") != "" else "<no stdout>")
 
         debug("-- stderr ---")
-        debug(result["stderr"])
+        debug(stderr if stderr.strip("\n\r\t ") != "" else "<no stderr>")
 
         debug("== End of Command output ==")
 
-    debug("%s command finished" % (formatter_name))
+    debug("%s command finished with status %d" % (formatter_name, returncode))
 
     if not success:
         debug(

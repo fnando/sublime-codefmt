@@ -283,7 +283,9 @@
     "command": [
       "$bundler",
       "rubocop",
-      "--auto-correct-all",
+      "--autocorrect-all",
+      "--raise-cop-error",
+      "--no-color",
       "--config",
       "$config",
       "$file"
