@@ -36,6 +36,12 @@ def find_root_dir_for_file(folders, file_name):
     return os.path.dirname(file_name)
 
 
+def log_prefix(input):
+    lines = input.splitlines()
+
+    return "\n".join(map(lambda line: "[codefmt] %s" % line, lines))
+
+
 def is_debug():
     return settings("debug")
 
@@ -254,10 +260,14 @@ def run_formatter(view, formatter):
     if is_debug() or is_log():
         debug("== Command output ==")
         debug("-- stdout ---")
-        debug(stdout if stdout.strip("\n\r\t ") != "" else "<no stdout>")
+        debug(
+            log_prefix(stdout
+                       ) if stdout.strip("\n\r\t ") != "" else "<no stdout>")
 
         debug("-- stderr ---")
-        debug(stderr if stderr.strip("\n\r\t ") != "" else "<no stderr>")
+        debug(
+            log_prefix(stderr
+                       ) if stderr.strip("\n\r\t ") != "" else "<no stderr>")
 
         debug("== End of Command output ==")
 
