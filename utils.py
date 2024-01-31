@@ -1,6 +1,6 @@
 import sublime
 import os
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, TimeoutExpired
 from pathlib import Path
 from platform import python_version
 import io
@@ -11,7 +11,22 @@ from shlex import quote
 
 
 def settings(key):
-    return sublime.load_settings("Codefmt.sublime-settings").get(key)
+    project_settings = {}
+    project_data = sublime.active_window().project_data()
+
+    if project_data is None:
+      project_data = {}
+
+    if "settings" in project_data:
+      if "Codefmt" in project_data["settings"]:
+        project_settings = project_data["settings"]["Codefmt"]
+
+    settings = {
+      **sublime.load_settings("Codefmt.sublime-settings").to_dict(),
+      **project_settings
+    }
+
+    return settings[key]
 
 
 def find_root_dir_for_file(folders, file_name):
@@ -194,8 +209,9 @@ def run_formatter(view, formatter):
             settings("paths") or []))
 
     debug("prepending paths:", paths)
-    env = os.environ.copy()
+    env = {**os.environ.copy(), **settings("env")}
     env["PATH"] = "%s:%s" % (":".join(paths), env["PATH"])
+    debug("env is:", env)
 
     debug("using root dir as", root_dir)
     debug("timeout is", settings("timeout"))

@@ -13,7 +13,7 @@
     "command": "edit_settings",
     "args": {
       "base_file": "${packages}/Codefmt/Default.sublime-keymap",
-      "default": "[\n\t$0\n]\n"
+      "default": "[\n. // Codefmt\n  {\n    \"keys\": [\"super+s\"],\n    \"command\": \"format_code_file\"\n  },\n  {\n    \"keys\": [\"ctrl+s\"],\n    \"command\": \"save\",\n    \"args\": { \"async\": true }\n  }\n]\n"
     }
   },
 

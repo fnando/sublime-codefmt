@@ -18,6 +18,12 @@
   // to the list below.
   "paths": [],
 
+  // Set custom environment variables that will be passed to the executing
+  // command.
+  //
+  // Notice that the value MUST be string (e.g. use `"true"` and not `true`).
+  "env": {},
+
   // Defines global variables.
   "variables": {
     "bundler": [{ "root_dir_has": ["Gemfile"], "value": ["bundle", "exec"] }]

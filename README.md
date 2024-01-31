@@ -57,8 +57,7 @@ bypass auto formatting. The following keybindings show how to do that for macOS:
 [
   {
     "keys": ["super+s"],
-    "command": "run_macro_file",
-    "args": {"file": "Packages/Codefmt/save_and_format_code_file.sublime-macro"}
+    "command": "format_code_file"
   },
   {
     "keys": ["ctrl+s"],
@@ -138,6 +137,34 @@ set the command to the full path. The following example shows how to override
 > **Note**
 >
 > Commands are always executed from the root directory of your project.
+
+Some commands may require additional environment variables, like ASDF's golang
+plugin and the `ASDF_GOLANG_MOD_VERSION_ENABLED` environment variable. You can
+use the setting `env` to specify that.
+
+### Using .sublime-project files
+
+You can override any setting per project. Here's an `.sublime-project` example:
+
+```json
+{
+  "folders": [
+    {
+      "path": "/home/fnando/example"
+    }
+  ],
+
+  "settings": {
+    "Codefmt": {
+      "env": {
+        "ASDF_GOLANG_MOD_VERSION_ENABLED": "true"
+      },
+      "debug": true,
+      "formatters": ["gofmt"]
+    }
+  }
+}
+```
 
 ## License
 
