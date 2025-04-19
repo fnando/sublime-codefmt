@@ -269,7 +269,8 @@
     // The command that will be executed for format files.
     "command": [
       "rustfmt",
-      "--edition", "2021",
+      "--edition",
+      "2021",
       "--config-path",
       "$config",
       "$file",
@@ -421,6 +422,24 @@
       ".eslintrc.json",
       ".eslintrc",
     ],
+  },
+
+  // Format files using biome.
+  "biome": {
+    // The command that will be executed for format files.
+    "command": ["npx", "biome", "format", "--write", "--config-path", "$config", "$file"],
+
+    // The scopes that will be considered when formatting
+    "scopes": ["source.js", "source.jsx", "source.ts", "source.tsx"],
+
+    // Additional flags when running in debug mode.
+    "debug": ["--verbose"],
+
+    // When no custom config file exists, use a default config file.
+    "default_config": "Packages/Codefmt/config/biome.json",
+
+    // Config files that will be looked up on the root of the project.
+    "config_files": ["biome.json", "biome.jsonc"],
   },
 
   // Add your custom overrides to the following node.
