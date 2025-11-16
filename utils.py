@@ -81,9 +81,9 @@ def expand_command(cmd, context):
             value = context[key]
 
         if type(value) == list:
-            value = expand_command(value, context)
-
             for item in value:
+                item = expand_command(item,
+                                      context) if type(item) == list else item
                 new_cmd.append(item)
         else:
             new_cmd.append(value)
