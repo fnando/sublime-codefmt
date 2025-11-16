@@ -15,15 +15,15 @@ def settings(key):
     project_data = sublime.active_window().project_data()
 
     if project_data is None:
-      project_data = {}
+        project_data = {}
 
     if "settings" in project_data:
-      if "Codefmt" in project_data["settings"]:
-        project_settings = project_data["settings"]["Codefmt"]
+        if "Codefmt" in project_data["settings"]:
+            project_settings = project_data["settings"]["Codefmt"]
 
     settings = {
-      **sublime.load_settings("Codefmt.sublime-settings").to_dict(),
-      **project_settings
+        **sublime.load_settings("Codefmt.sublime-settings").to_dict(),
+        **project_settings
     }
 
     return settings[key]
@@ -217,18 +217,20 @@ def run_formatter(view, formatter):
     debug("timeout is", settings("timeout"))
 
     cmd = formatter["command"]
+    config_file = find_config_file(formatter, root_dir)
+    context = {
+        "file": file_name,
+        "config": config_file,
+        "root_dir": root_dir,
+        "debug": []
+    }
+    variables = {}
 
     if is_debug() and formatter["debug"]:
-        cmd += formatter["debug"]
-
-    config_file = find_config_file(formatter, root_dir)
-
-    context = {"file": file_name, "config": config_file, "root_dir": root_dir}
+        context["debug"] = formatter["debug"]
 
     if "variables" in formatter:
         variables = formatter["variables"]
-    else:
-        variables = {}
 
     context = expand_formatter_variables(variables, context)
     context = expand_formatter_variables(settings("variables") or {}, context)
@@ -276,14 +278,19 @@ def run_formatter(view, formatter):
     if is_debug() or is_log():
         debug("== Command output ==")
         debug("-- stdout ---")
-        debug(
-            log_prefix(stdout
-                       ) if stdout.strip("\n\r\t ") != "" else "<no stdout>")
+        stdout_output = "<no stdout>"
+        stderr_output = "<no stderr>"
+
+        if stdout.strip("\n\r\t ") != "":
+            stdout_output = log_prefix(stdout)
+
+        if stderr.strip("\n\r\t ") != "":
+            stderr_output = log_prefix(stderr)
+
+        debug(stdout_output)
 
         debug("-- stderr ---")
-        debug(
-            log_prefix(stderr
-                       ) if stderr.strip("\n\r\t ") != "" else "<no stderr>")
+        debug(stderr_output)
 
         debug("== End of Command output ==")
 

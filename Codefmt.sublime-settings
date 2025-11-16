@@ -50,7 +50,7 @@
   // Format Python file using [yapf](https://pypi.org/project/yapf/).
   "yapf": {
     // The command that will be executed for format files.
-    "command": ["yapf", "--style", "$config", "--in-place", "$file"],
+    "command": ["yapf", "--style", "$config", "--in-place", "$file", "$debug"],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.python"],
@@ -68,7 +68,7 @@
   // Format Dart files using [Flutter](https://flutter.dev/docs/reference/flutter-cli).
   "flutter": {
     // The command that will be executed for format files.
-    "command": ["flutter", "format", "$file"],
+    "command": ["flutter", "format", "$file", "$debug"],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.dart"],
@@ -93,6 +93,7 @@
       "80",
       "--overwrite",
       "$file",
+      "$debug",
     ],
 
     // The scopes that will be considered when formatting
@@ -121,6 +122,7 @@
       "$file",
       "--output",
       "$file",
+      "$debug",
     ],
 
     // The scopes that will be considered when formatting
@@ -152,6 +154,7 @@
       "--in-place",
       "--aggressive",
       "--global-config",
+      "$debug",
       "$config",
       "$file",
     ],
@@ -185,6 +188,7 @@
       "$file",
       "--config",
       "$config",
+      "$debug",
     ],
 
     // The scopes that will be considered when formatting
@@ -210,6 +214,7 @@
       "no",
       "--config",
       "$config",
+      "$debug",
       "$file",
     ],
 
@@ -229,7 +234,7 @@
   // Format Golang files using goimports.
   "goimports": {
     // The command that will be executed for format files.
-    "command": ["goimports", "-w", "$file"],
+    "command": ["goimports", "$debug", "-w", "$file"],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.go"],
@@ -249,7 +254,7 @@
   // the `formatters` list.
   "gofmt": {
     // The command that will be executed for format files.
-    "command": ["gofmt", "-w", "$file"],
+    "command": ["gofmt", "$debug", "-w", "$file"],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.go"],
@@ -273,6 +278,7 @@
       "2021",
       "--config-path",
       "$config",
+      "$debug",
       "$file",
     ],
 
@@ -295,6 +301,7 @@
     "command": [
       "$bundler",
       "rubocop",
+      "$debug",
       "--autocorrect-all",
       "--raise-cop-error",
       "--no-color",
@@ -322,7 +329,7 @@
   // the `formatters` list.
   "rubyfmt": {
     // The command that will be executed for format files.
-    "command": ["rubyfmt", "-i", "$file"],
+    "command": ["rubyfmt", "$debug", "-i", "$file"],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.ruby"],
@@ -342,6 +349,7 @@
     // The command that will be executed for format files.
     "command": [
       "prettier",
+      "$debug",
       "--parser",
       "$parser",
       "--write",
@@ -401,7 +409,7 @@
   // Format files using eslint.
   "eslint": {
     // The command that will be executed for format files.
-    "command": ["eslint", "--fix", "--config", "$config", "$file"],
+    "command": ["eslint", "$debug", "--fix", "--config", "$config", "$file"],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.js", "source.jsx", "source.ts", "source.tsx"],
@@ -430,6 +438,7 @@
       "npx",
       "biome",
       "format",
+      "$debug",
       "--write",
       "--config-path",
       "$config",
@@ -452,7 +461,7 @@
   // Format files using yamlfmt.
   "yamlfmt": {
     // The command that will be executed for format files.
-    "command": ["yamlfmt", "-conf", "$config", "$file"],
+    "command": ["yamlfmt", "$debug", "-conf", "$config", "$file"],
 
     // The scopes that will be considered when formatting
     "scopes": ["source.yaml"],
